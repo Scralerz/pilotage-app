@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ Pilotage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+:root {
+  --bg: #0A0A0F;
+  --bg2: #111118;
+  --bg3: #1A1A24;
+  --card: #16161F;
+  --card2: #1E1E2A;
+  --border: #2A2A3A;
+  --border2: #353548;
+  --text: #F0F0F8;
+  --text2: #A0A0B8;
+  --text3: #60607A;
+  --blue: #4F7EFF;
+  --blue-l: rgba(79,126,255,0.12);
+  --green: #2ECC71;
+  --green-l: rgba(46,204,113,0.12);
+  --orange: #FF6B35;
+  --orange-l: rgba(255,107,53,0.12);
+  --red: #FF4757;
+  --red-l: rgba(255,71,87,0.12);
+  --purple: #9B59B6;
+  --purple-l: rgba(155,89,182,0.12);
+  --teal: #1ABC9C;
+  --teal-l: rgba(26,188,156,0.12);
+  --amber: #F39C12;
+  --amber-l: rgba(243,156,18,0.12);
+  --r: 12px;
+  --r2: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow2: 0 2px 12px rgba(0,0,0,0.3);
+}
+.light {
+  --bg: #F4F4F8;
+  --bg2: #EEEEF4;
+  --bg3: #E4E4EE;
+  --card: #FFFFFF;
+  --card2: #F8F8FC;
+  --border: #E0E0EC;
+  --border2: #D0D0E0;
+  --text: #0A0A1A;
+  --text2: #4A4A6A;
+  --text3: #8A8AAA;
+  --blue: #3366FF;
+  --blue-l: rgba(51,102,255,0.08);
+  --green: #16A34A;
+  --green-l: rgba(22,163,74,0.08);
+  --orange: #EA580C;
+  --orange-l: rgba(234,88,12,0.08);
+  --red: #DC2626;
+  --red-l: rgba(220,38,38,0.08);
+  --purple: #7C3AED;
+  --purple-l: rgba(124,58,237,0.08);
+  --teal: #0D9488;
+  --teal-l: rgba(13,148,136,0.08);
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow2: 0 2px 12px rgba(0,0,0,0.06);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+h1,h2,h3 { font-family: 'Syne', sans-serif; }
+
+/* Layout */
+.app { display:flex; min-height:100vh; }
+.sidebar {
+  width: 220px;
+  min-height: 100vh;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top:0; left:0; bottom:0;
+  z-index: 100;
+  transition: transform 0.3s;
+}
+.main {
+  margin-left: 220px;
+  flex: 1;
+  min-height: 100vh;
+  padding: 32px;
+}
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; padding: 16px; padding-top: 64px; }
+  .mobile-menu-btn { display: flex !important; }
+}
+
+/* Sidebar */
+.sidebar-logo {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.logo-mark {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.logo-sub { font-size: 11px; color: var(--text3); margin-top: 2px; letter-spacing: 0.5px; }
+
+.nav-section { padding: 16px 12px 8px; }
+.nav-label { font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; padding: 0 8px 8px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r2);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text2);
+  margin-bottom: 2px;
+  border: none; background: none; width: 100%; text-align: left;
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: var(--blue-l); color: var(--blue); }
+.nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.nav-dot { width: 6px; height: 6px; border-radius: 50%; margin-left: auto; }
+
+.sidebar-bottom { margin-top: auto; padding: 16px 12px; border-top: 1px solid var(--border); }
+.theme-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--bg3);
+  border-radius: var(--r2);
+  cursor: pointer; border: none; width: 100%; color: var(--text2);
+  font-size: 13px; font-family: 'DM Sans', sans-serif;
+}
+.toggle-pill {
+  width: 40px; height: 22px; background: var(--border2);
+  border-radius: 11px; position: relative; transition: background 0.2s;
+}
+.toggle-pill.on { background: var(--blue); }
+.toggle-thumb {
+  width: 16px; height: 16px; background: white;
+  border-radius: 50%; position: absolute; top: 3px; left: 3px;
+  transition: transform 0.2s;
+}
+.toggle-pill.on .toggle-thumb { transform: translateX(18px); }
+
+/* Mobile header */
+.mobile-header {
+  display: none;
+  position: fixed; top:0; left:0; right:0; z-index: 200;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  align-items: center; justify-content: space-between;
+}
+@media (max-width: 768px) { .mobile-header { display: flex; } }
+.mobile-menu-btn {
+  display: none; align-items: center; justify-content: center;
+  width: 36px; height: 36px;
+  background: var(--bg3); border: none; border-radius: 8px;
+  color: var(--text); cursor: pointer; font-size: 18px;
+}
+
+/* Overlay */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5); z-index: 50;
+}
+.overlay.show { display: block; }
+
+/* Cards */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: var(--shadow2);
+}
+.card-header { padding: 20px 24px 0; }
+.card-body { padding: 20px 24px; }
+
+/* Section title */
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--text3); margin-bottom: 12px;
+}
+
+/* Page header */
+.page-header { margin-bottom: 28px; }
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 800; letter-spacing: -1px;
+  line-height: 1.1;
+}
+.page-subtitle { font-size: 14px; color: var(--text2); margin-top: 6px; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 12px 20px; border-radius: var(--r2);
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+  cursor: pointer; border: none; transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--blue); color: white; }
+.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-green { background: var(--green); color: white; }
+.btn-green:hover { filter: brightness(1.1); }
+.btn-red { background: var(--red); color: white; }
+.btn-ghost {
+  background: var(--bg3); color: var(--text2);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { background: var(--border); color: var(--text); }
+.btn-sm { padding: 8px 14px; font-size: 13px; }
+.btn-xs { padding: 6px 10px; font-size: 12px; }
+
+/* Badges */
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.3px;
+}
+.badge-blue  { background: var(--blue-l);   color: var(--blue);   }
+.badge-green { background: var(--green-l);  color: var(--green);  }
+.badge-orange{ background: var(--orange-l); color: var(--orange); }
+.badge-red   { background: var(--red-l);    color: var(--red);    }
+.badge-purple{ background: var(--purple-l); color: var(--purple); }
+.badge-teal  { background: var(--teal-l);   color: var(--teal);   }
+.badge-amber { background: var(--amber-l);  color: var(--amber);  }
+
+/* KPI cards */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; }
+.kpi-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 20px; text-align: center;
+}
+.kpi-val { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; line-height: 1; }
+.kpi-label { font-size: 12px; color: var(--text2); margin-top: 6px; }
+
+/* Progress bars */
+.progress-bar {
+  height: 8px; background: var(--bg3);
+  border-radius: 4px; overflow: hidden;
+}
+.progress-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+
+/* Tables */
+.table-header {
+  display: grid; padding: 10px 16px;
+  font-size: 11px; font-weight: 600; color: var(--text3);
+  letter-spacing: 0.5px; text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.table-row {
+  display: grid; padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s; align-items: center;
+  font-size: 14px;
+}
+.table-row:hover { background: var(--bg3); }
+.table-row:last-child { border-bottom: none; }
+
+/* Forms */
+.form-group { margin-bottom: 20px; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 8px; display: block; }
+.form-input {
+  width: 100%; padding: 12px 14px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--r2); color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 14px;
+  outline: none; transition: border 0.15s;
+}
+.form-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-l); }
+.form-input::placeholder { color: var(--text3); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+.form-select {
+  width: 100%; padding: 12px 14px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--r2); color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 14px;
+  outline: none; cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+  transition: border 0.15s;
+}
+.form-select:focus { border-color: var(--blue); }
+
+/* Day picker */
+.day-picker { display: flex; gap: 6px; flex-wrap: wrap; }
+.day-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 2px solid var(--border); background: transparent;
+  color: var(--text2); font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.day-btn.active { background: var(--blue); border-color: var(--blue); color: white; }
+.day-btn:hover:not(.active) { border-color: var(--blue); color: var(--blue); }
+
+/* Task block */
+.task-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.task-accent { width: 4px; background: var(--blue); flex-shrink: 0; }
+.task-inner { padding: 20px 24px; flex: 1; }
+.task-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px; font-weight: 700;
+}
+.task-meta { font-size: 13px; color: var(--text2); margin-top: 4px; }
+
+.subtask-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.subtask-row:last-child { border-bottom: none; }
+.subtask-check {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid var(--border2); background: transparent;
+  cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.subtask-check.done { background: var(--green); border-color: var(--green); }
+.subtask-label { font-size: 14px; flex: 1; }
+.subtask-label.done { color: var(--text3); text-decoration: line-through; }
+.subtask-dur { font-size: 12px; color: var(--text3); }
+
+/* Donut-style progress */
+.ring-container { position: relative; display: inline-flex; }
+.ring-label {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+
+/* Type tabs */
+.type-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+.type-tab {
+  padding: 10px 16px; border-radius: var(--r2);
+  border: 2px solid transparent; cursor: pointer;
+  font-size: 13px; font-weight: 600; transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Divider */
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* Empty state */
+.empty {
+  text-align: center; padding: 48px 24px; color: var(--text3);
+}
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+.empty-text { font-size: 14px; }
+
+/* Animations */
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+.fade-in { animation: fadeIn 0.25s ease forwards; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+.pulse { animation: pulse 2s infinite; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* Chips */
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 8px; border-radius: 6px;
+  font-size: 11px; font-weight: 600;
+}
+
+/* Stats row */
+.stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.stat-item { flex: 1; min-width: 100px; }
+
+/* Accordion */
+.accordion { border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.accordion-header {
+  padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; background: var(--card); transition: background 0.1s;
+  border: none; width: 100%; text-align: left; color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+.accordion-header:hover { background: var(--card2); }
+.accordion-body { padding: 16px 20px; background: var(--card2); border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback, useRef } = React;
+
+// ─── STORAGE ─────────────────────────────────────────────────
+const DB_KEY = 'pilotage_db_v1';
+const defaultDB = {
+  quotidiens: [], recurrents: [], longTerme: [],
+  ponctuels: [], aliments: [], recettes: [],
+  calories: [], executions: [], exceptions: [],
+  params: { heureBascule: '05:00', poids: '', poidsObjectif: '' },
+};
+function loadDB() {
+  try { return { ...defaultDB, ...JSON.parse(localStorage.getItem(DB_KEY) || '{}') }; }
+  catch { return defaultDB; }
+}
+function saveDB(db) {
+  localStorage.setItem(DB_KEY, JSON.stringify(db));
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────
+function formatDate(d = new Date()) {
+  return d.toLocaleDateString('fr-FR');
+}
+function journeeLogique() {
+  const now = new Date();
+  if (now.getHours() < 5) {
+    const y = new Date(now);
+    y.setDate(y.getDate() - 1);
+    return y;
+  }
+  return now;
+}
+function genId(prefix, arr) {
+  return `${prefix}_${String(arr.length + 1).padStart(3, '0')}`;
+}
+function useDB() {
+  const [db, setDB] = useState(loadDB);
+  const update = useCallback((fn) => {
+    setDB(prev => {
+      const next = { ...prev };
+      fn(next);
+      saveDB(next);
+      return next;
+    });
+  }, []);
+  return [db, update];
+}
+
+// ─── NAVIGATION CONFIG ────────────────────────────────────────
+const NAV = [
+  { id: 'maintenant',  label: 'Maintenant',          icon: '⚡', color: 'blue'   },
+  { id: 'vueJour',     label: 'Vue du jour',          icon: '📅', color: 'blue'   },
+  { id: 'ajouter',     label: 'Ajouter',              icon: '＋', color: 'purple' },
+  { id: 'reussites',   label: 'Réussites',            icon: '✨', color: 'amber'  },
+  { id: 'poids',       label: 'Poids',                icon: '⚖️', color: 'purple' },
+  { id: 'quotidiens',  label: 'Quotidiens',           icon: '🔁', color: 'blue'   },
+  { id: 'longTerme',   label: 'Long terme',           icon: '🎯', color: 'green'  },
+  { id: 'ponctuels',   label: 'Ponctuels',            icon: '📌', color: 'red'    },
+  { id: 'alimentation',label: 'Alimentation',         icon: '🥗', color: 'teal'   },
+  { id: 'calories',    label: 'Calories',             icon: '🔥', color: 'orange' },
+  { id: 'archives',    label: 'Archives',             icon: '🗂️', color: 'blue'  },
+];
+
+// ─── APP ─────────────────────────────────────────────────────
+export default function App() {
+  const [page, setPage] = useState('maintenant');
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [db, updateDB] = useDB();
+
+  useEffect(() => {
+    document.body.classList.toggle('light', theme === 'light');
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const navigate = (id) => { setPage(id); setMenuOpen(false); };
+
+  const pages = {
+    maintenant:   <PageMaintenant db={db} updateDB={updateDB} navigate={navigate} />,
+    vueJour:      <PageVueJour db={db} updateDB={updateDB} />,
+    ajouter:      <PageAjouter db={db} updateDB={updateDB} navigate={navigate} />,
+    reussites:    <PageReussites db={db} />,
+    poids:        <PagePoids db={db} updateDB={updateDB} />,
+    quotidiens:   <PageQuotidiens db={db} updateDB={updateDB} navigate={navigate} />,
+    longTerme:    <PageLongTerme db={db} updateDB={updateDB} navigate={navigate} />,
+    ponctuels:    <PagePonctuels db={db} updateDB={updateDB} navigate={navigate} />,
+    alimentation: <PageAlimentation db={db} updateDB={updateDB} />,
+    calories:     <PageCalories db={db} updateDB={updateDB} />,
+    archives:     <PageArchives db={db} />,
+  };
+
+  return (
+    <div className="app">
+      {/* Mobile header */}
+      <div className="mobile-header">
+        <button className="mobile-menu-btn" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
+        <span style={{fontFamily:'Syne',fontWeight:800,fontSize:16,background:'linear-gradient(135deg,var(--blue),var(--purple))',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>⚡ Pilotage</span>
+        <div style={{width:36}}/>
+      </div>
+
+      {/* Overlay */}
+      <div className={`overlay ${menuOpen ? 'show' : ''}`} onClick={() => setMenuOpen(false)} />
+
+      {/* Sidebar */}
+      <aside className={`sidebar ${menuOpen ? 'open' : ''}`}>
+        <div className="sidebar-logo">
+          <div className="logo-mark">⚡ Pilotage</div>
+          <div className="logo-sub">TABLEAU DE BORD</div>
+        </div>
+        <div className="nav-section" style={{flex:1,overflowY:'auto'}}>
+          <div className="nav-label">Navigation</div>
+          {NAV.map(n => (
+            <button key={n.id} className={`nav-item ${page === n.id ? 'active' : ''}`} onClick={() => navigate(n.id)}>
+              <span className="nav-icon">{n.icon}</span>
+              <span>{n.label}</span>
+              {page === n.id && <div className="nav-dot" style={{background:`var(--${n.color})`}}/>}
+            </button>
+          ))}
+        </div>
+        <div className="sidebar-bottom">
+          <button className="theme-toggle" onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}>
+            <span>{theme === 'dark' ? '🌙 Mode sombre' : '☀️ Mode clair'}</span>
+            <div className={`toggle-pill ${theme === 'light' ? 'on' : ''}`}>
+              <div className="toggle-thumb"/>
+            </div>
+          </button>
+        </div>
+      </aside>
+
+      {/* Main */}
+      <main className="main">
+        <div className="fade-in" key={page}>
+          {pages[page]}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAGE MAINTENANT
+// ══════════════════════════════════════════════════════════════
+function PageMaintenant({ db, updateDB, navigate }) {
+  const actifs = db.quotidiens.filter(q => q.statut === 'Actif');
+  const tache = actifs[0] || null;
+  const [subsDone, setSubsDone] = useState({});
+
+  const toggleSub = (idx) => {
+    setSubsDone(prev => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
+  const terminer = () => {
+    if (!tache) return;
+    updateDB(d => {
+      d.executions.push({
+        id: genId('EX', d.executions),
+        date: formatDate(journeeLogique()),
+        type: 'Quotidien', nom: tache.nom,
+        statut: 'Termine', ts: new Date().toISOString()
+      });
+    });
+    setSubsDone({});
+    alert(`✅ "${tache?.nom}" validé !`);
+  };
+
+  const passer = () => {
+    if (!tache) return;
+    updateDB(d => {
+      d.executions.push({
+        id: genId('EX', d.executions),
+        date: formatDate(journeeLogique()),
+        type: 'Quotidien', nom: tache.nom,
+        statut: 'Skip', ts: new Date().toISOString()
+      });
+    });
+    alert(`Tâche passée.`);
+  };
+
+  const doneCount = tache?.sousObjectifs ? tache.sousObjectifs.filter((_,i) => subsDone[i]).length : 0;
+  const totalSubs = tache?.sousObjectifs?.length || 0;
+  const pct = totalSubs ? Math.round(doneCount / totalSubs * 100) : 0;
+
+  return (
+    <div>
+      <div className="page-header">
+        <h1 className="page-title">Ce que je dois faire</h1>
+        <p className="page-subtitle">{formatDate(journeeLogique())} · Une seule chose à la fois</p>
+      </div>
+
+      {/* Démarrer journée */}
+      <div style={{marginBottom:24}}>
+        <button className="btn btn-ghost" style={{borderColor:'var(--purple)',color:'var(--purple)'}}
+          onClick={() => alert(`🌅 Journée démarrée à ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})} !`)}>
+          🌅 Démarrer la journée
+        </button>
+      </div>
+
+      {!tache ? (
+        <div className="card" style={{marginBottom:24}}>
+          <div className="empty">
+            <div className="empty-icon">🎉</div>
+            <div className="empty-text">Toutes les tâches sont terminées pour aujourd'hui !</div>
+            <button className="btn btn-primary" style={{marginTop:16}} onClick={() => navigate('ajouter')}>
+              Ajouter un objectif
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div style={{marginBottom:24}}>
+          <div className="section-title">EN COURS</div>
+          <div className="task-block">
+            <div style={{display:'flex'}}>
+              <div className="task-accent" style={{background:'var(--blue)'}}/>
+              <div className="task-inner">
+                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:8}}>
+                  <div>
+                    <div className="task-title">{tache.nom}</div>
+                    <div className="task-meta">
+                      {tache.duree && `${tache.duree} min`}
+                      {tache.position && ` · ${tache.position}`}
+                    </div>
+                  </div>
+                  <span className="badge badge-blue">🔁 Quotidien</span>
+                </div>
+
+                {/* Sous-objectifs */}
+                {tache.sousObjectifs?.length > 0 && (
+                  <div style={{marginTop:16,paddingTop:16,borderTop:'1px solid var(--border)'}}>
+                    {tache.sousObjectifs.map((so, i) => (
+                      <div key={i} className="subtask-row">
+                        <div className={`subtask-check ${subsDone[i] ? 'done' : ''}`}
+                          onClick={() => toggleSub(i)}>
+                          {subsDone[i] && <span style={{color:'white',fontSize:12}}>✓</span>}
+                        </div>
+                        <span className={`subtask-label ${subsDone[i] ? 'done' : ''}`}>{so.nom}</span>
+                        {so.duree && <span className="subtask-dur">{so.duree} min</span>}
+                      </div>
+                    ))}
+
+                    {totalSubs > 0 && (
+                      <div style={{marginTop:12}}>
+                        <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
+                          <span style={{fontSize:12,color:'var(--text2)'}}>Progression</span>
+                          <span style={{fontSize:12,fontWeight:600,color:'var(--blue)'}}>{doneCount}/{totalSubs} · {pct}%</span>
+                        </div>
+                        <div className="progress-bar">
+                          <div className="progress-fill" style={{width:`${pct}%`,background:'var(--blue)'}}/>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Actions */}
+                <div style={{display:'flex',gap:10,marginTop:20}}>
+                  <button className="btn btn-green" style={{flex:2}} onClick={terminer}>✅ Terminer</button>
+                  <button className="btn btn-ghost" style={{flex:1}} onClick={passer}>⏭ Passer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* À suivre */}
+      {actifs.length > 1 && (
+        <div>
+          <div className="section-title">À SUIVRE</div>
+          <div className="card">
+            {actifs.slice(1, 4).map((t, i) => (
+              <div key={t.id} className="table-row" style={{gridTemplateColumns:'1fr auto',borderBottom: i < actifs.slice(1,4).length-1 ? '1px solid var(--border)' : 'none'}}>
+                <div style={{fontWeight:500}}>{t.nom}</div>
+                <span style={{fontSize:12,color:'var(--text3)'}}>{t.duree ? `${t.duree} min` : ''}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAGE VUE DU JOUR
+// ══════════════════════════════════════════════════════════════
+function PageVueJour({ db, updateDB }) {
+  const today = formatDate(journeeLogique());
+  const [date, setDate] = useState(today);
+
+  // Construire le planning à partir des BD
+  const planning = [];
+
+  // Ajouter les quotidiens actifs
+  db.quotidiens.filter(q => q.statut === 'Actif').forEach((q, i) => {
+    planning.push({
+      id: q.id, nom: q.nom, dur: q.duree ? `${q.duree} min` : '',
+      cat: 'Quotidien', statut: 'À faire', color: 'blue', ordre: 10 + i
+    });
+  });
+
+  // Ajouter les récurrents actifs
+  db.recurrents.filter(r => r.statut === 'Actif').forEach((r, i) => {
+    planning.push({
+      id: r.id, nom: r.nom, dur: r.duree ? `${r.duree} min` : '',
+      heure: r.heure, cat: 'Récurrent', statut: 'À faire', color: 'orange', ordre: 20 + i
+    });
+  });
+
+  const retirerBloc = (id) => {
+    if (!confirm('Retirer ce bloc pour cette date uniquement ?')) return;
+    updateDB(d => {
+      d.exceptions.push({
+        id: genId('EXC', d.exceptions),
+        date, blocId: id, action: 'Retire',
+        ts: new Date().toISOString()
+      });
+    });
+  };
+
+  const retires = new Set(
+    db.exceptions.filter(e => e.date === date).map(e => e.blocId)
+  );
+
+  const visible = planning.filter(p => !retires.has(p.id)).sort((a,b) => a.ordre - b.ordre);
+
+  const catColor = {
+    'Quotidien': 'blue', 'Récurrent': 'orange', 'Long terme': 'green',
+    'Ponctuel': 'red', 'Alimentation': 'teal'
+  };
+
+  return (
+    <div>
+      <div className="page-header">
+        <h1 className="page-title">Vue du jour</h1>
+        <p className="page-subtitle">Planning complet · {date}</p>
+      </div>
+
+      {/* Sélecteur date */}
+      <div style={{display:'flex',gap:10,marginBottom:24,alignItems:'center',flexWrap:'wrap'}}>
+        <input type="date" className="form-input" style={{width:'auto'}}
+          value={date.split('/').reverse().join('-')}
+          onChange={e => setDate(e.target.value.split('-').reverse().join('/'))} />
+        <button className="btn btn-ghost btn-sm" onClick={() => setDate(today)}>Aujourd'hui</button>
+      </div>
+
+      {/* Planning */}
+      <div className="section-title">PLANNING</div>
+      {visible.length === 0 ? (
+        <div className="card"><div className="empty"><div className="empty-icon">📭</div><div className="empty-text">Aucun bloc pour cette date</div></div></div>
+      ) : (
+        <div className="card">
+          <div className="table-header" style={{gridTemplateColumns:'1fr 100px 80px 36px'}}>
+            <span>Bloc</span><span>Catégorie</span><span>Durée</span><span/>
+          </div>
+          {visible.map((p, i) => (
+            <div key={p.id} className="table-row" style={{gridTemplateColumns:'1fr 100px 80px 36px'}}>
+              <div style={{display:'flex',alignItems:'center',gap:10}}>
+                <div style={{width:3,height:24,borderRadius:2,background:`var(--${catColor[p.cat]||'blue'})`}}/>
+                <span style={{fontWeight:500}}>{p.nom}</span>
+              </div>
+              <span className={`badge badge-${catColor[p.cat]||'blue'}`}>{p.cat}</span>
+              <span style={{fontSize:13,color:'var(--text2)'}}>{p.dur}</span>
+              <button onClick={() => retirerBloc(p.id)}
+                style={{background:'none',border:'none',color:'var(--text3)',cursor:'pointer',fontSize:16,padding:4}}>
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAGE AJOUTER UN OBJECTIF
+// ══════════════════════════════════════════════════════════════
+function PageAjouter({ db, updateDB, navigate }) {
+  const [type, setType] = useState('Quotidien');
+  const [form, setForm] = useState({
+    nom:'', duree:'', dateDebut:'', dateFin:'', heure:'',
+    frequence:'Toutes les semaines', datesExclues:'',
+    position:'Debut de journee', refBloc:'',
+    statut:'En cours', jours:['Tous'],
+    sousObjectifs:[{nom:'',duree:'',jours:'Tous'},{nom:'',duree:'',jours:'Tous'},{nom:'',duree:'',jours:'Tous'}],
+    intermediaires:['','',''],
+    dateRDV:'', heureRDV:'', heureDepart:'', lieu:'', infos:'', typePrep:'Aucune',
+    nomRepas:'', heureRepas:'', dureeRepas:'', posAlim:'Debut de journee', refAlim:'',
+    useHeureFix: true,
+  });
+
+  const setF = (k, v) => setForm(prev => ({ ...prev, [k]: v }));
+
+  const TYPES = [
+    { id:'Quotidien',    label:'🔁 Quotidien',    color:'blue'   },
+    { id:'Recurrent',   label:'📅 Récurrent',    color:'orange' },
+    { id:'Long terme',  label:'🎯 Long terme',   color:'green'  },
+    { id:'Ponctuel',    label:'📌 Ponctuel',     color:'red'    },
+    { id:'Alimentation',label:'🥗 Alimentation', color:'teal'   },
+  ];
+
+  const JOURS = ['Tous','Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+
+  const toggleJour = (j) => {
+    if (j === 'Tous') { setF('jours', ['Tous']); return; }
+    const curr = form.jours.filter(x => x !== 'Tous');
+    if (curr.includes(j)) {
+      const next = curr.filter(x => x !== j);
+      setF('jours', next.length ? next : ['Tous']);
+    } else {
+      setF('jours', [...curr, j]);
+    }
+  };
+
+  // Options position
+  const posOptions = ['Debut de journee','Fin de journee',
+    ...db.quotidiens.filter(q=>q.statut==='Actif').map(q=>q.nom),
+    ...db.longTerme.filter(l=>l.statut==='En cours').map(l=>l.nom),
+  ];
+
+  const valider = () => {
+    if (!form.nom.trim()) { alert('Le nom est obligatoire.'); return; }
+
+    updateDB(d => {
+      switch(type) {
+        case 'Quotidien':
+          d.quotidiens.push({
+            id: genId('QT', d.quotidiens),
+            nom: form.nom, duree: form.duree,
+            dateDebut: form.dateDebut, statut: 'Actif',
+            position: form.position, refBloc: form.refBloc,
+            jours: form.jours,
+            sousObjectifs: form.sousObjectifs.filter(s => s.nom.trim()),
+          });
+          break;
+        case 'Recurrent':
+          d.recurrents.push({
+            id: genId('RC', d.recurrents),
+            nom: form.nom, duree: form.duree,
+            dateDebut: form.dateDebut, dateFin: form.dateFin,
+            heure: form.heure, frequence: form.frequence,
+            datesExclues: form.datesExclues,
+            position: form.position, refBloc: form.refBloc,
+            jours: form.jours, statut: 'Actif',
+          });
+          break;
+        case 'Long terme':
+          d.longTerme.push({
+            id: genId('LT', d.longTerme),
+            nom: form.nom, duree: form.duree,
+            dateDebut: form.dateDebut, statut: form.statut,
+            position: form.position, refBloc: form.refBloc,
+            intermediaires: form.intermediaires.filter(i => i.trim()),
+            sousObjectifs: form.sousObjectifs.filter(s => s.nom.trim()),
+          });
+          break;
+        case 'Ponctuel':
+          d.ponctuels.push({
+            id: genId('PT', d.ponctuels),
+            nom: form.nom, dateRDV: form.dateRDV,
+            heureRDV: form.heureRDV, heureDepart: form.heureDepart,
+            lieu: form.lieu, infos: form.infos,
+            typePrep: form.typePrep, statut: 'Planifie',
+          });
+          break;
+        case 'Alimentation':
+          // Repas dans le planning (pas une base d'aliments)
+          d.executions.push({
+            id: genId('AL', d.executions),
+            type: 'Alimentation', nom: form.nomRepas,
+            heure: form.useHeureFix ? form.heureRepas : '',
+            duree: form.useHeureFix ? form.dureeRepas : '',
+            position: !form.useHeureFix ? form.posAlim : '',
+            refBloc: !form.useHeureFix ? form.refAlim : '',
+            statut: 'Actif',
+          });
+          break;
+      }
+    });
+
+    alert(`✅ ${type} ajouté !`);
+    setForm({ ...form, nom:'', duree:'', dateDebut:'', dateFin:'', heure:'',
+      datesExclues:'', sousObjectifs:[{nom:'',duree:'',jours:'Tous'},{nom:'',duree:'',jours:'Tous'},{nom:'',duree:'',jours:'Tous'}],
+      intermediaires:['','',''], dateRDV:'', heureRDV:'', lieu:'', infos:'', nomRepas:'', heureRepas:'', dureeRepas:'',
+    });
+  };
+
+  return (
+    <div style={{maxWidth:640}}>
+      <div className="page-header">
+        <h1 className="page-title">Ajouter un objectif</h1>
+        <p className="page-subtitle">Choisis le type puis remplis le formulaire</p>
+      </div>
+
+      {/* Type tabs */}
+      <div className="type-tabs">
+        {TYPES.map(t => (
+          <button key={t.id} className="type-tab"
+            style={{
+              background: type===t.id ? `var(--${t.color})` : `var(--${t.color}-l)`,
+              color: type===t.id ? 'white' : `var(--${t.color})`,
+              borderColor: type===t.id ? `var(--${t.color})` : 'transparent',
+            }}
+            onClick={() => setType(t.id)}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="card card-body" style={{display:'flex',flexDirection:'column',gap:4}}>
+
+        {/* ── COMMUN ── */}
+        <div className="form-group">
+          <label className="form-label">Nom</label>
+          <input className="form-input" placeholder={`Nom de l'objectif...`}
+            value={form.nom} onChange={e => setF('nom', e.target.value)} />
+        </div>
+
+        {type !== 'Alimentation' && type !== 'Ponctuel' && (
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Durée (min)</label>
+              <input className="form-input" type="number" placeholder="ex: 45"
+                value={form.duree} onChange={e => setF('duree', e.target.value)} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Date de début</label>
+              <input className="form-input" type="date"
+                value={form.dateDebut} onChange={e => setF('dateDebut', e.target.value)} />
+            </div>
+          </div>
+        )}
+
+        {/* ── POSITION (Quotidien, Récurrent, Long terme) ── */}
+        {['Quotidien','Recurrent','Long terme'].includes(type) && (
+          <>
+            <div className="divider"/>
+            <div className="section-title">POSITION DANS LE PLANNING</div>
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Avant / Après</label>
+                <select className="form-select"
+                  value={form.position} onChange={e => setF('position', e.target.value)}>
+                  <option>Debut de journee</option>
+                  <option>Fin de journee</option>
+                  <option>Avant</option>
+                  <option>Apres</option>
+                </select>
+              </div>
+              {['Avant','Apres'].includes(form.position) && (
+                <div className="form-group">
+                  <label className="form-label">Quel élément</label>
+                  <select className="form-select"
+                    value={form.refBloc} onChange={e => setF('refBloc', e.target.value)}>
+                    <option value="">Choisir...</option>
+                    {posOptions.slice(2).map(o => <option key={o}>{o}</option>)}
+                  </select>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* ── JOURS (Quotidien, Récurrent) ── */}
+        {['Quotidien','Recurrent'].includes(type) && (
+          <>
+            <div className="divider"/>
+            <div className="section-title">JOURS ACTIFS</div>
+            <div className="form-group">
+              <div className="day-picker">
+                {JOURS.map(j => (
+                  <button key={j} className={`day-btn ${form.jours.includes(j) ? 'active' : ''}`}
+                    onClick={() => toggleJour(j)}>{j.slice(0,3)}</button>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* ── SOUS-OBJECTIFS (Quotidien) ── */}
+        {type === 'Quotidien' && (
+          <>
+            <div className="divider"/>
+            <div className="section-title">SOUS-OBJECTIFS (optionnel)</div>
+            {form.sousObjectifs.map((so, i) => (
+              <div key={i} className="form-row" style={{marginBottom:10}}>
+                <input className="form-input" placeholder={`Sous-objectif ${i+1}...`}
+                  value={so.nom} onChange={e => {
+                    const next = [...form.sousObjectifs];
+                    next[i] = { ...next[i], nom: e.target.value };
+                    setF('sousObjectifs', next);
+                  }} />
+                <input className="form-input" type="number" placeholder="Durée (min)"
+                  value={so.duree} onChange={e => {
+                    const next = [...form.sousObjectifs];
+                    next[i] = { ...next[i], duree: e.target.value };
+                    setF('sousObjectifs', next);
+                  }} />
+              </div>
+            ))}
+          </>
+        )}
+
+        {/* ── RÉCURRENT ── */}
+        {type === 'Recurrent' && (
+          <>
+            <div className="divider"/>
+            <div className="section-title">PARAMÈTRES RÉCURRENCE</div>
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Date de fin</label>
+                <input className="form-input" type="date"
+                  value={form.dateFin} onChange={e => setF('dateFin', e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Heure</label>
+                <input className="form-input" type="time"
+                  value={form.heure} onChange={e => setF('heure', e.target.value)} />
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Fréquence</label>
+              <select className="form-select"
+                value={form.frequence} onChange={e => setF('frequence', e.target.value)}>
+                <option>Toutes les semaines</option>
+                <option>1 semaine sur 2</option>
+                <option>1 semaine sur 3</option>
+                <option>1 semaine sur 4</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Dates exclues (optionnel)</label>
+              <input className="form-input" placeholder="ex: 22/12/2025-05/01/2026, 15/02-28/02"
+                value={form.datesExclues} onChange={e => setF('datesExclues', e.target.value)} />
+            </div>
+          </>
+        )}
+
+        {/* ── LONG TERME ── */}
+        {type === 'Long terme' && (
+          <>
+            <div className="divider"/>
+            <div className="section-title">STRUCTURE</div>
+            <div className="form-group">
+              <label className="form-label">Statut</label>
+              <select className="form-select"
+                value={form.statut} onChange={e => setF('statut', e.target.value)}>
+                <option>En cours</option>
+                <option>En pause</option>
+                <option>Termine</option>
+              </select>
+            </div>
+            <div className="section-title" style={{marginTop:8}}>Objectifs intermédiaires (optionnel)</div>
+            {form.intermediaires.map((inter, i) => (
+              <div key={i} className="form-group" style={{marginBottom:10}}>
+                <input className="form-input" placeholder={`Intermédiaire ${i+1}...`}
+                  value={inter} onChange={e => {
+                    const next = [...form.intermediaires];
+                    next[i] = e.target.value;
+                    setF('intermediaires', next);
+                  }} />
+              </div>
+            ))}
+            <div className="section-title">Sous-objectifs (optionnel)</div>
+            {form.sousObjectifs.map((so, i) => (
+              <div key={i} className="form-group" style={{marginBottom:10}}>
+                <input className="form-input" placeholder={`Sous-objectif ${i+1}...`}
+                  value={so.nom} onChange={e => {
+                    const next = [...form.sousObjectifs];
+                    next[i] = { ...next[i], nom: e.target.value };
+                    setF('sousObjectifs', next);
+                  }} />
+              </div>
+            ))}
+          </>
+        )}
+
+        {/* ── PONCTUEL ── */}
+        {type === 'Ponctuel' && (
+          <>
+            <div className="divider"/>
+            <div className="section-title">DÉTAILS DE L'ÉVÉNEMENT</div>
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Date du RDV</label>
+                <input className="form-input" type="date"
+                  value={form.dateRDV} onChange={e => setF('dateRDV', e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Heure RDV</label>
+                <input className="form-input" type="time"
+                  value={form.heureRDV} onChange={e => setF('heureRDV', e.target.value)} />
+              </div>
+            </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Heure de départ</label>
+                <input className="form-input" type="time"
+                  value={form.heureDepart} onChange={e => setF('heureDepart', e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Type de préparation</label>
+                <select className="form-select"
+                  value={form.typePrep} onChange={e => setF('typePrep', e.target.value)}>
+                  <option>Aucune</option>
+                  <option>1 semaine avant</option>
+                  <option>2 semaines avant</option>
+                  <option>3 semaines avant</option>
+                  <option>Date specifique</option>
+                  <option>Recurrente</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Lieu / Adresse</label>
+              <input className="form-input" placeholder="Saisir le lieu..."
+                value={form.lieu} onChange={e => setF('lieu', e.target.value)} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Infos complémentaires</label>
+              <input className="form-input" placeholder="Notes, documents à apporter..."
+                value={form.infos} onChange={e => setF('infos', e.target.value)} />
+            </div>
+          </>
+        )}
+
+        {/* ── ALIMENTATION ── */}
+        {type === 'Alimentation' && (
+          <>
+            <div className="form-group">
+              <label className="form-label">Nom du repas</label>
+              <input className="form-input" placeholder="ex: Déjeuner, Dîner, Collation..."
+                value={form.nomRepas} onChange={e => setF('nomRepas', e.target.value)} />
+            </div>
+            <div className="divider"/>
+            <div className="section-title">PLACEMENT DANS LE PLANNING</div>
+            <div style={{display:'flex',gap:8,marginBottom:16}}>
+              <button className={`btn btn-sm ${form.useHeureFix ? 'btn-primary' : 'btn-ghost'}`}
+                onClick={() => setF('useHeureFix', true)}>Heure fixe</button>
+              <button className={`btn btn-sm ${!form.useHeureFix ? 'btn-primary' : 'btn-ghost'}`}
+                onClick={() => setF('useHeureFix', false)}>Position</button>
+            </div>
+            {form.useHeureFix ? (
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Heure</label>
+                  <input className="form-input" type="time"
+                    value={form.heureRepas} onChange={e => setF('heureRepas', e.target.value)} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Durée (min)</label>
+                  <input className="form-input" type="number" placeholder="ex: 30"
+                    value={form.dureeRepas} onChange={e => setF('dureeRepas', e.target.value)} />
+                </div>
+              </div>
+            ) : (
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Position</label>
+                  <select className="form-select"
+                    value={form.posAlim} onChange={e => setF('posAlim', e.target.value)}>
+                    <option>Debut de journee</option>
+                    <option>Fin de journee</option>
+                    <option>Avant</option>
+                    <option>Apres</option>
+                  </select>
+                </div>
+                {['Avant','Apres'].includes(form.posAlim) && (
+                  <div className="form-group">
+                    <label className="form-label">Quel élément</label>
+                    <select className="form-select"
+                      value={form.refAlim} onChange={e => setF('refAlim', e.target.value)}>
+                      <option value="">Choisir...</option>
+                      {posOptions.slice(2).map(o => <option key={o}>{o}</option>)}
+                    </select>
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        )}
+
+        <div className="divider"/>
+        <div style={{display:'flex',gap:10}}>
+          <button className="btn btn-green" style={{flex:2}} onClick={valider}>
+            ✅ Valider & Ajouter
+          </button>
+          <button className="btn btn-ghost" style={{flex:1}}
+            onClick={() => setForm({ ...form, nom:'', duree:'' })}>
+            Réinitialiser
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAGE RÉUSSITES
+// ══════════════════════════════════════════════════════════════
+function PageReussites({ db }) {
+  const today = formatDate(journeeLogique());
+  const exToday = db.executions.filter(e => e.date === today && e.statut === 'Termine');
+  const actifs = db.quotidiens.filter(q => q.statut === 'Actif').length
+               + db.recurrents.filter(r => r.statut === 'Actif').length
+               + db.longTerme.filter(l => l.statut === 'En cours').length;
+
+  // Streak
+  let streak = 0;
+  const sortedEx = [...db.executions].sort((a,b) => new Date(b.ts)-new Date(a.ts));
+  // Simplifié: compte les jours consécutifs avec au moins 1 exécution
+  const exByDate = {};
+  sortedEx.forEach(e => { if(e.statut==='Termine') exByDate[e.date] = true; });
+  let d = new Date();
+  while (exByDate[formatDate(d)]) { streak++; d.setDate(d.getDate()-1); }
+
+  const kpis = [
+    { val: exToday.length, label: 'Tâches réalisées', color: 'blue' },
+    { val: actifs, label: 'Objectifs actifs', color: 'green' },
+    { val: streak, label: 'Jours consécutifs 🔥', color: 'orange' },
+    { val: db.ponctuels.filter(p=>p.statut==='Planifie').length, label: 'Événements à venir', color: 'red' },
+  ];
+
+  const JOURS_SEMAINE = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+
+  return (
+    <div>
+      <div className="page-header">
+        <h1 className="page-title">Réussites ✨</h1>
+        <p className="page-subtitle">{today} · Ta progression</p>
+      </div>
+
+      {/* KPIs */}
+      <div className="section-title">VUE D'ENSEMBLE</div>
+      <div className="kpi-grid" style={{marginBottom:28}}>
+        {kpis.map((k,i) => (
+          <div key={i} className="kpi-card">
+            <div className="kpi-val" style={{color:`var(--${k.color})`}}>{k.val}</div>
+            <div className="kpi-label">{k.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Progression objectifs long terme */}
+      {db.longTerme.filter(l=>l.statut==='En cours').length > 0 && (
+        <>
+          <div className="section-title">PROGRESSION — OBJECTIFS EN COURS</div>
+          <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:28}}>
+            {db.longTerme.filter(l=>l.statut==='En cours').map(lt => {
+              const total = (lt.intermediaires?.length||0) + (lt.sousObjectifs?.length||0);
+              const done = db.executions.filter(e=>e.nom===lt.nom&&e.statut==='Termine').length;
+              const pct = total ? Math.min(100, Math.round(done/total*100)) : 0;
+              return (
+                <div key={lt.id} className="card card-body">
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
+                    <span style={{fontWeight:600}}>{lt.nom}</span>
+                    <span style={{fontFamily:'Syne',fontSize:20,fontWeight:800,color:'var(--green)'}}>{pct}%</span>
+                  </div>
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{width:`${pct}%`,background:'var(--green)'}}/>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+
+      {/* Routines hebdo */}
+      {db.quotidiens.filter(q=>q.statut==='Actif').length > 0 && (
+        <>
+          <div className="section-title">ROUTINES — SEMAINE EN COURS</div>
+          <div className="card" style={{marginBottom:28}}>
+            <div className="table-header" style={{gridTemplateColumns:'1fr repeat(7,32px)'}}>
+              <span>Objectif</span>
+              {JOURS_SEMAINE.map(j=><span key={j} style={{textAlign:'center'}}>{j}</span>)}
+            </div>
+            {db.quotidiens.filter(q=>q.statut==='Actif').map(q => {
+              // Calculer les jours de la semaine en cours
+              const now = new Date();
+              const dayOfWeek = now.getDay(); // 0=dim
+              const days = JOURS_SEMAINE.map((_, i) => {
+                const d = new Date(now);
+                d.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1) + i);
+                const ds = formatDate(d);
+                const done = db.executions.some(e => e.nom===q.nom && e.date===ds && e.statut==='Termine');
+                const isPast = d <= now;
+                return { done, isPast };
+              });
+              return (
+                <div key={q.id} className="table-row" style={{gridTemplateColumns:'1fr repeat(7,32px)',borderBottom:'1px solid var(--border)'}}>
+                  <span style={{fontWeight:500}}>{q.nom}</span>
+                  {days.map((d,i)=>(
+                    <span key={i} style={{textAlign:'center',fontSize:14}}>
+                      {d.done ? '✅' : d.isPast ? '–' : ''}
+                    </span>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+
+      {/* Ponctuels prioritaires */}
+      {db.ponctuels.filter(p=>p.statut==='Planifie').length > 0 && (
+        <>
+          <div className="section-title">ÉVÉNEMENTS À VENIR</div>
+          <div className="card">
+            <div className="table-header" style={{gridTemplateColumns:'1fr 120px 60px'}}>
+              <span>Événement</span><span>Date</span><span>J-</span>
+            </div>
+            {db.ponctuels.filter(p=>p.statut==='Planifie').map(p => {
+              const jMoins = p.dateRDV ? Math.ceil((new Date(p.dateRDV)-new Date())/(1000*60*60*24)) : '–';
+              return (
+                <div key={p.id} className="table-row" style={{gridTemplateColumns:'1fr 120px 60px'}}>
+                  <span style={{fontWeight:500}}>{p.nom}</span>
+                  <span style={{color:'var(--text2)',fontSize:13}}>{p.dateRDV}</span>
+                  <span style={{fontWeight:700,color:jMoins<30?'var(--red)':'var(--text2)'}}>{jMoins}</span>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+
+      {actifs === 0 && db.executions.length === 0 && (
+        <div className="card"><div className="empty">
+          <div className="empty-icon">🌱</div>
+          <div className="empty-text">Commence par ajouter des objectifs pour voir ta progression ici.</div>
+        </div></div>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAGE POIDS
+// ══════════════════════════════════════════════════════════════
+function PagePoids({ db, updateDB }) {
+  const [poids, setPoids] = useState('');
+  const [poidsObj, setPoidsObj] = useState(db.params?.poidsObjectif || '');
+
+  const saisir = () => {
+    const val = parseFloat(poids.replace(',','.'));
+    if (isNaN(val)) { alert('Valeur invalide.'); return; }
+    updateDB(d => {
+      d.params = { ...d.params, poids: val };
+      d.calories = d.calories || [];
+      d.calories.push({
+        id: genId('PD', d.calories),
+        date: formatDate(journeeLogique()),
+        type: 'Poids', valeur: val,
+        ts: new Date().toISOString()
+      });
+    });
+    setPoids('');
+    alert(`✅ Poids ${val} kg enregistré !`);
+  };
+
+  const saveObjectif = () => {
+    const val = parseFloat(poidsObj.replace(',','.'));
+    if (isNaN(val)) return;
+    updateDB(d => { d.params = { ...d.params, poidsObjectif: val }; });
+    alert('✅ Objectif enregistré !');
+  };
+
+  const poidsActuel = db.params?.poids || '';
+  const poidsObjectif = db.params?.poidsObjectif || '';
+  const aPerdr = poidsActuel && poidsObjectif ? (poidsActuel - poidsObjectif).toFixed(1) : null;
+  const pct = aPerdr && poidsActuel && poidsObjectif && poidsActuel > poidsObjectif
+    ? Math.max(0, Math.min(100, Math.round((1 - aPerdr / (poidsActuel - poidsObjectif + aPerdr)) * 100)))
+    : 0;
+
+  const historique = (db.calories||[]).filter(c=>c.type==='Poids').slice(-10).reverse();
+
+  return (
+    <div style={{maxWidth:600}}>
+      <div className="page-header">
+        <h1 className="page-title">Poids & Déficit</h1>
+        <p className="page-subtitle">Suivi par déficit calorique</p>
+      </div>
+
+      {/* KPIs */}
+      <div className="kpi-grid" style={{marginBottom:24}}>
+        <div className="kpi-card">
+          <div className="kpi-val" style={{color:'var(--purple)'}}>{poidsActuel ? `${poidsActuel} kg` : '–'}</div>
+          <div className="kpi-label">Poids actuel</div>
+        </div>
+        <div className="kpi-card">
+          <div className="kpi-val" style={{color:'var(--green)'}}>{poidsObjectif ? `${poidsObjectif} kg` : '–'}</div>
+          <div className="kpi-label">Objectif</div>
+        </div>
+        <div className="kpi-card">
+          <div className="kpi-val" style={{color:'var(--red)'}}>{aPerdr ? `${aPerdr} kg` : '–'}</div>
+          <div className="kpi-label">À perdre</div>
+        </div>
+      </div>
+
+      {/* Barre progression */}
+      {aPerdr && (
+        <div className="card card-body" style={{marginBottom:24}}>
+          <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}>
+            <span style={{fontSize:13,color:'var(--text2)'}}>Progression</span>
+            <span style={{fontSize:13,fontWeight:700,color:'var(--purple)'}}>{pct}%</span>
+          </div>
+          <div className="progress-bar" style={{height:12}}>
+            <div className="progress-fill" style={{width:`${pct}%`,background:'linear-gradient(90deg,var(--purple),var(--blue))'}}/>
+          </div>
+        </div>
+      )}
+
+      {/* Saisir poids */}
+      <div className="section-title">SAISIR LE POIDS DU JOUR</div>
+      <div className="card card-body" style={{marginBottom:24}}>
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Poids aujourd'hui (kg)</label>
+            <input className="form-input" type="number" step="0.1" placeholder="ex: 70.5"
+              value={poids} onChange={e => setPoids(e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Objectif (kg)</label>
+            <input className="form-input" type="number" step="0.1" placeholder="ex: 65"
+              value={poidsObj} onChange={e => setPoidsObj(e.target.value)} />
+          </div>
+        </div>
+        <div style={{display:'flex',gap:10}}>
+          <button className="btn btn-primary" style={{flex:2}} onClick={saisir}>⚖️ Enregistrer</button>
+          <button className="btn btn-ghost" style={{flex:1}} onClick={saveObjectif}>Sauver objectif</button>
+        </div>
+      </div>
+
+      {/* Historique */}
+      {historique.length > 0 && (
+        <>
+          <div className="section-title">HISTORIQUE</div>
+          <div className="card">
+            <div className="table-header" style={{gridTemplateColumns:'1fr 1fr'}}>
+              <span>Date</span><span>Poids</span>
+            </div>
+            {historique.map((h,i) => (
+              <div key={i} className="table-row" style={{gridTemplateColumns:'1fr 1fr'}}>
+                <span style={{color:'var(--text2)'}}>{h.date}</span>
+                <span style={{fontWeight:600,color:'var(--purple)'}}>{h.valeur} kg</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAGE QUOTIDIENS
+// ══════════════════════════════════════════════════════════════
+function PageQuotidiens({ db, updateDB, navigate }) {
+  const [expanded, setExpanded] = useState(null);
+
+  const clore = (id) => {
+    updateDB(d => {
+      const q = d.quotidiens.find(x=>x.id===id);
+      if (q) q.statut = 'Clos';
+    });
+  };
+
+  return (
+    <div>
+      <div className="page-header">
+        <h1 className="page-title">Objectifs quotidiens</h1>
+        <p className="page-subtitle">Tes routines et habitudes actives</p>
+      </div>
+
+      <button className="btn btn-primary" style={{marginBottom:20}}
+        onClick={() => navigate('ajouter')}>+ Ajouter un quotidien</button>
+
+      {db.quotidiens.length === 0 ? (
+        <div className="card"><div className="empty">
+          <div className="empty-icon">🔁</div>
+          <div className="empty-text">Aucun objectif quotidien. Commence par en ajouter un !</div>
+        </div></div>
+      ) : (
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          {db.quotidiens.map(q => (
+            <div key={q.id} className="card">
+              <button className="accordion-header" onClick={() => setExpanded(expanded===q.id?null:q.id)}>
+                <div style={{display:'flex',alignItems:'center',gap:12}}>
+                  <div style={{width:3,height:24,borderRadius:2,background:'var(--blue)'}}/>
+                  <div>
+                    <div style={{fontWeight:600}}>{q.nom}</div>
+                    <div style={{fontSize:12,color:'var(--text3)',marginTop:2}}>
+                      {q.jours?.join(', ')} · {q.duree ? `${q.duree} min` : ''}
+                    </div>
+                  </div>
+                </div>
+                <span className={`badge badge-${q.statut==='Actif'?'green':'amber'}`}>{q.statut}</span>
+              </button>
+              {expanded === q.id && (
+                <div className="accordion-body">
+                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:12}}>
+                    <div><div style={{fontSize:11,color:'var(--text3)'}}>Position</div><div style={{fontSize:14}}>{q.position||'–'}</div></div>
+                    <div><div style={{fontSize:11,color:'var(--text3)'}}>Date début</div><div style={{fontSize:14}}>{q.dateDebut||'–'}</div></div>
+                  </div>
+                  {q.sousObjectifs?.length>0 && (
+                    <div>
+                      <div style={{fontSize:11,color:'var(--text3)',marginBottom:8}}>Sous-objectifs</div>
+                      {q.sousObjectifs.map((so,i)=>(
+                        <div key={i} style={{fontSize:14,padding:'6px 0',borderBottom:'1px solid var(--border)',display:'flex',justifyContent:'space-between'}}>
+                          <span>{so.nom}</span>
+                          <span style={{color:'var(--text3)'}}>{so.duree ? `${so.duree} min` : ''}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div style={{display:'flex',gap:8,marginTop:12}}>
+                    {q.statut==='Actif' && (
+                      <button className="btn btn-xs btn-ghost" onClick={() => clore(q.id)} style={{color:'var(--text3)'}}>
+                        Clôturer
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAGE LONG TERME
+// ══════════════════════════════════════════════════════════════
+function PageLongTerme({ db, updateDB, navigate }) {
+  const [expanded, setExpanded] = useState(null);
+
+  return (
+    <div>
+      <div className="page-header">
+        <h1 className="page-title">Objectifs long terme</h1>
+        <p className="page-subtitle">Tes grands projets en cours</p>
+      </div>
+
+      <button className="btn btn-primary" style={{marginBottom:20}}
+        onClick={() => navigate('ajouter')}>+ Ajouter un objectif LT</button>
+
+      {db.longTerme.length === 0 ? (
+        <div className="card"><div className="empty">
+          <div className="empty-icon">🎯</div>
+          <div className="empty-text">Aucun objectif long terme. Lance-toi !</div>
+        </div></div>
+      ) : (
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          {db.longTerme.map(lt => {
+            const totalItems = (lt.intermediaires?.length||0) + (lt.sousObjectifs?.length||0);
+            const done = db.executions.filter(e=>e.nom===lt.nom&&e.statut==='Termine').length;
+            const pct = totalItems ? Math.min(100,Math.round(done/totalItems*100)) : 0;
+            return (
+              <div key={lt.id} className="card">
+                <button className="accordion-header" onClick={() => setExpanded(expanded===lt.id?null:lt.id)}>
+                  <div style={{display:'flex',alignItems:'center',gap:12,flex:1}}>
+                    <div style={{width:3,height:24,borderRadius:2,background:'var(--green)'}}/>
+                    <div style={{flex:1}}>
+                      <div style={{fontWeight:600}}>{lt.nom}</div>
+                      <div style={{marginTop:6,width:'100%',maxWidth:200}}>
+                        <div className="progress-bar">
+                          <div className="progress-fill" style={{width:`${pct}%`,background:'var(--green)'}}/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{display:'flex',alignItems:'center',gap:8}}>
+                    <span style={{fontFamily:'Syne',fontWeight:800,color:'var(--green)'}}>{pct}%</span>
+                    <span className={`badge badge-${lt.statut==='En cours'?'amber':'green'}`}>{lt.statut}</span>
+                  </div>
+                </button>
+                {expanded === lt.id && (
+                  <div className="accordion-body">
+                    {lt.intermediaires?.filter(i=>i).length>0 && (
+                      <div style={{marginBottom:12}}>
+                        <div style={{fontSize:11,color:'var(--text3)',marginBottom:8}}>Objectifs intermédiaires</div>
+                        {lt.intermediaires.filter(i=>i).map((inter,i)=>(
+                          <div key={i} style={{fontSize:14,padding:'6px 0',borderBottom:'1px solid var(--border)'}}>▸ {inter}</div>
+                        ))}
+                      </div>
+                    )}
+                    {lt.sousObjectifs?.filter(s=>s.nom).length>0 && (
+                      <div>
+                        <div style={{fontSize:11,color:'var(--text3)',marginBottom:8}}>Sous-objectifs</div>
+                        {lt.sousObjectifs.filter(s=>s.nom).map((so,i)=>(
+                          <div key={i} style={{fontSize:14,padding:'6px 0',borderBottom:'1px solid var(--border)'}}>· {so.nom}</div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAGE PONCTUELS
+// ══════════════════════════════════════════════════════════════
+function PagePonctuels({ db, updateDB, navigate }) {
+  return (
+    <div>
+      <div className="page-header">
+        <h1 className="page-title">Événements ponctuels</h1>
+        <p className="page-subtitle">Tes RDV et préparations</p>
+      </div>
+
+      <button className="btn btn-primary" style={{marginBottom:20}}
+        onClick={() => navigate('ajouter')}>+ Ajouter un événement</button>
+
+      {db.ponctuels.length === 0 ? (
+        <div className="card"><div className="empty">
+          <div className="empty-icon">📌</div>
+          <div className="empty-text">Aucun événement ponctuel.</div>
+        </div></div>
+      ) : (
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          {db.ponctuels.map(p => {
+            const jMoins = p.dateRDV ? Math.ceil((new Date(p.dateRDV)-new Date())/(1000*60*60*24)) : null;
+            return (
+              <div key={p.id} className="card card-body">
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+                  <div>
+                    <div style={{fontWeight:600,fontSize:16}}>{p.nom}</div>
+                    <div style={{fontSize:13,color:'var(--text2)',marginTop:4}}>
+                      {p.dateRDV && `📅 ${p.dateRDV}`}
+                      {p.heureRDV && ` · ⏰ ${p.heureRDV}`}
+                      {p.lieu && ` · 📍 ${p.lieu}`}
+                    </div>
+                    {p.infos && <div style={{fontSize:13,color:'var(--text3)',marginTop:4}}>{p.infos}</div>}
+                  </div>
+                  <div style={{textAlign:'right',flexShrink:0}}>
+                    {jMoins !== null && (
+                      <div style={{fontFamily:'Syne',fontSize:24,fontWeight:800,color:jMoins<7?'var(--red)':jMoins<30?'var(--orange)':'var(--text2)'}}>
+                        J-{jMoins}
+                      </div>
+                    )}
+                    <span className="badge badge-amber">{p.typePrep||'–'}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAGE ALIMENTATION
+// ══════════════════════════════════════════════════════════════
+function PageAlimentation({ db, updateDB }) {
+  const [tab, setTab] = useState('aliments');
+  const [formA, setFormA] = useState({ nom:'', kcal:'', proteines:'', glucides:'', lipides:'', categorie:'' });
+  const [formR, setFormR] = useState({ nom:'', ingredients:[] });
+
+  const ajouterAliment = () => {
+    if (!formA.nom.trim()) { alert('Nom obligatoire.'); return; }
+    updateDB(d => {
+      d.aliments.push({ id: genId('AL', d.aliments), ...formA });
+    });
+    setFormA({ nom:'', kcal:'', proteines:'', glucides:'', lipides:'', categorie:'' });
+    alert('✅ Aliment ajouté !');
+  };
+
+  return (
+    <div>
+      <div className="page-header">
+        <h1 className="page-title">Alimentation</h1>
+        <p className="page-subtitle">Base d'aliments et recettes</p>
+      </div>
+
+      <div style={{display:'flex',gap:8,marginBottom:20}}>
+        <button className={`btn btn-sm ${tab==='aliments'?'btn-primary':'btn-ghost'}`} onClick={() => setTab('aliments')}>Aliments</button>
+        <button className={`btn btn-sm ${tab==='recettes'?'btn-primary':'btn-ghost'}`} onClick={() => setTab('recettes')}>Recettes</button>
+        <button className={`btn btn-sm ${tab==='ajouterA'?'btn-primary':'btn-ghost'}`} onClick={() => setTab('ajouterA')}>+ Aliment</button>
+      </div>
+
+      {tab === 'aliments' && (
+        db.aliments.length === 0 ? (
+          <div className="card"><div className="empty"><div className="empty-icon">🥦</div><div className="empty-text">Aucun aliment enregistré.</div></div></div>
+        ) : (
+          <div className="card">
+            <div className="table-header" style={{gridTemplateColumns:'1fr 80px 80px 80px 80px'}}>
+              <span>Aliment</span><span>Kcal</span><span>Prot.</span><span>Gluc.</span><span>Lip.</span>
+            </div>
+            {db.aliments.map(a => (
+              <div key={a.id} className="table-row" style={{gridTemplateColumns:'1fr 80px 80px 80px 80px'}}>
+                <div>
+                  <div style={{fontWeight:500}}>{a.nom}</div>
+                  {a.categorie && <span style={{fontSize:11,color:'var(--text3)'}}>{a.categorie}</span>}
+                </div>
+                <span style={{color:'var(--orange)',fontWeight:600}}>{a.kcal}</span>
+                <span style={{color:'var(--blue)'}}>{a.proteines}g</span>
+                <span style={{color:'var(--amber)'}}>{a.glucides}g</span>
+                <span style={{color:'var(--teal)'}}>{a.lipides}g</span>
+              </div>
+            ))}
+          </div>
+        )
+      )}
+
+      {tab === 'ajouterA' && (
+        <div className="card card-body" style={{maxWidth:480}}>
+          <div className="form-group">
+            <label className="form-label">Nom de l'aliment</label>
+            <input className="form-input" placeholder="ex: Poulet rôti"
+              value={formA.nom} onChange={e => setFormA({...formA, nom:e.target.value})} />
+          </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Kcal / 100g</label>
+              <input className="form-input" type="number"
+                value={formA.kcal} onChange={e => setFormA({...formA, kcal:e.target.value})} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Catégorie</label>
+              <input className="form-input" placeholder="Protéines, Légumes..."
+                value={formA.categorie} onChange={e => setFormA({...formA, categorie:e.target.value})} />
+            </div>
+          </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Protéines (g)</label>
+              <input className="form-input" type="number"
+                value={formA.proteines} onChange={e => setFormA({...formA, proteines:e.target.value})} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Glucides (g)</label>
+              <input className="form-input" type="number"
+                value={formA.glucides} onChange={e => setFormA({...formA, glucides:e.target.value})} />
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Lipides (g)</label>
+            <input className="form-input" type="number" style={{maxWidth:160}}
+              value={formA.lipides} onChange={e => setFormA({...formA, lipides:e.target.value})} />
+          </div>
+          <button className="btn btn-green" onClick={ajouterAliment}>✅ Ajouter l'aliment</button>
+        </div>
+      )}
+
+      {tab === 'recettes' && (
+        <div className="card"><div className="empty"><div className="empty-icon">🍽️</div><div className="empty-text">La gestion des recettes arrive bientôt !</div></div></div>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAGE CALORIES
+// ══════════════════════════════════════════════════════════════
+function PageCalories({ db, updateDB }) {
+  const today = formatDate(journeeLogique());
+  const [date, setDate] = useState(today);
+  const [form, setForm] = useState({ aliment:'', type:'Aliment', qte:'', kcal:'', repas:'Petit-dejeuner' });
+
+  const repas = ['Petit-dejeuner','Dejeuner','Diner','Collation'];
+  const objectifKcal = 1800; // Depuis PARAMETRES
+
+  const joursEntrees = (db.calories||[]).filter(c => c.date===date && c.type!=='Poids');
+  const totalKcal = joursEntrees.reduce((s,e) => s+(parseFloat(e.kcal)||0), 0);
+  const deficit = objectifKcal - totalKcal;
+
+  const ajouter = () => {
+    if (!form.aliment) { alert('Nom obligatoire.'); return; }
+    updateDB(d => {
+      d.calories = d.calories || [];
+      d.calories.push({
+        id: genId('CAL', d.calories),
+        date, nom: form.aliment, type: form.type,
+        qte: form.qte, kcal: form.kcal, repas: form.repas,
+        ts: new Date().toISOString()
+      });
+    });
+    setForm({ ...form, aliment:'', qte:'', kcal:'' });
+  };
+
+  const repasGroups = repas.map(r => ({
+    label: r,
+    items: joursEntrees.filter(e => e.repas === r),
+    total: joursEntrees.filter(e=>e.repas===r).reduce((s,e)=>s+(parseFloat(e.kcal)||0),0)
+  }));
+
+  return (
+    <div>
+      <div className="page-header">
+        <h1 className="page-title">Calories</h1>
+        <p className="page-subtitle">Suivi journalier · logique 5h → 4h59</p>
+      </div>
+
+      {/* Sélecteur date */}
+      <div style={{display:'flex',gap:10,marginBottom:20,alignItems:'center',flexWrap:'wrap'}}>
+        <input type="date" className="form-input" style={{width:'auto'}}
+          value={date.split('/').reverse().join('-')}
+          onChange={e => setDate(e.target.value.split('-').reverse().join('/'))} />
+        <button className="btn btn-ghost btn-sm" onClick={() => setDate(today)}>Aujourd'hui</button>
+      </div>
+
+      {/* Récapitulatif */}
+      <div className="kpi-grid" style={{marginBottom:20}}>
+        <div className="kpi-card">
+          <div className="kpi-val" style={{color:'var(--orange)'}}>{objectifKcal}</div>
+          <div className="kpi-label">Objectif kcal</div>
+        </div>
+        <div className="kpi-card">
+          <div className="kpi-val" style={{color:'var(--red)'}}>{Math.round(totalKcal)}</div>
+          <div className="kpi-label">Ingérées</div>
+        </div>
+        <div className="kpi-card">
+          <div className="kpi-val" style={{color:deficit>0?'var(--green)':'var(--red)'}}>
+            {deficit>0?'+':''}{Math.round(deficit)}
+          </div>
+          <div className="kpi-label">Déficit</div>
+        </div>
+      </div>
+
+      {/* Barre */}
+      <div className="card card-body" style={{marginBottom:24}}>
+        <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}>
+          <span style={{fontSize:13,color:'var(--text2)'}}>Remplissage</span>
+          <span style={{fontSize:13,fontWeight:700,color:'var(--orange)'}}>
+            {Math.round(totalKcal/objectifKcal*100)}%
+          </span>
+        </div>
+        <div className="progress-bar" style={{height:12}}>
+          <div className="progress-fill" style={{
+            width:`${Math.min(100,totalKcal/objectifKcal*100)}%`,
+            background: totalKcal>objectifKcal ? 'var(--red)' : 'var(--orange)'
+          }}/>
+        </div>
+      </div>
+
+      {/* Repas */}
+      {repasGroups.map(g => (
+        <div key={g.label} style={{marginBottom:20}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
+            <div className="section-title" style={{margin:0}}>{g.label.toUpperCase()}</div>
+            <span style={{fontSize:13,fontWeight:600,color:'var(--orange)'}}>{g.total} kcal</span>
+          </div>
+          {g.items.length > 0 && (
+            <div className="card" style={{marginBottom:8}}>
+              {g.items.map((e,i) => (
+                <div key={e.id} className="table-row" style={{gridTemplateColumns:'1fr 60px 80px'}}>
+                  <span style={{fontWeight:500}}>{e.nom}</span>
+                  <span style={{color:'var(--text3)',fontSize:13}}>{e.qte}g</span>
+                  <span style={{fontWeight:600,color:'var(--orange)',fontSize:13}}>{e.kcal} kcal</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+
+      {/* Ajouter */}
+      <div className="section-title">AJOUTER UN ALIMENT</div>
+      <div className="card card-body">
+        <div className="form-group">
+          <label className="form-label">Repas</label>
+          <select className="form-select" value={form.repas} onChange={e=>setForm({...form,repas:e.target.value})}>
+            {repas.map(r=><option key={r}>{r}</option>)}
+          </select>
+        </div>
+        <div className="form-group">
+          <label className="form-label">Aliment / Recette</label>
+          <input className="form-input" placeholder="Nom..."
+            value={form.aliment} onChange={e=>setForm({...form,aliment:e.target.value})}/>
+        </div>
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Quantité (g)</label>
+            <input className="form-input" type="number"
+              value={form.qte} onChange={e=>setForm({...form,qte:e.target.value})}/>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Kcal</label>
+            <input className="form-input" type="number"
+              value={form.kcal} onChange={e=>setForm({...form,kcal:e.target.value})}/>
+          </div>
+        </div>
+        <button className="btn btn-orange" style={{background:'var(--orange)',color:'white'}} onClick={ajouter}>+ Ajouter</button>
+      </div>
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAGE ARCHIVES
+// ══════════════════════════════════════════════════════════════
+function PageArchives({ db }) {
+  const archivesQ = db.quotidiens.filter(q => q.statut === 'Clos');
+  const archivesLT = db.longTerme.filter(l => l.statut === 'Termine');
+  const archivesPT = db.ponctuels.filter(p => p.statut === 'Termine');
+
+  const total = archivesQ.length + archivesLT.length + archivesPT.length;
+
+  return (
+    <div>
+      <div className="page-header">
+        <h1 className="page-title">Archives</h1>
+        <p className="page-subtitle">{total} éléments terminés ou clos</p>
+      </div>
+
+      {total === 0 ? (
+        <div className="card"><div className="empty">
+          <div className="empty-icon">🗂️</div>
+          <div className="empty-text">Rien ici pour l'instant. Continue à progresser !</div>
+        </div></div>
+      ) : (
+        <>
+          {archivesQ.length > 0 && (
+            <>
+              <div className="section-title">QUOTIDIENS CLOS</div>
+              <div className="card" style={{marginBottom:20}}>
+                {archivesQ.map(q => (
+                  <div key={q.id} className="table-row" style={{gridTemplateColumns:'1fr auto'}}>
+                    <span style={{fontWeight:500,color:'var(--text2)'}}>{q.nom}</span>
+                    <span className="badge badge-blue">Clos</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+          {archivesLT.length > 0 && (
+            <>
+              <div className="section-title">LONG TERME TERMINÉS</div>
+              <div className="card" style={{marginBottom:20}}>
+                {archivesLT.map(l => (
+                  <div key={l.id} className="table-row" style={{gridTemplateColumns:'1fr auto'}}>
+                    <span style={{fontWeight:500}}>{l.nom}</span>
+                    <span className="badge badge-green">100%</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+          {archivesPT.length > 0 && (
+            <>
+              <div className="section-title">PONCTUELS TERMINÉS</div>
+              <div className="card">
+                {archivesPT.map(p => (
+                  <div key={p.id} className="table-row" style={{gridTemplateColumns:'1fr 120px auto'}}>
+                    <span style={{fontWeight:500}}>{p.nom}</span>
+                    <span style={{color:'var(--text3)',fontSize:13}}>{p.dateRDV}</span>
+                    <span className="badge badge-green">Terminé</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+// ─── RENDER ──────────────────────────────────────────────────
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
