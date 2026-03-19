@@ -1,1 +1,589 @@
-<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>My React App</title>\n    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>\n    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>\n    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>\n</head>\n<body>\n    <div id="root"></div>\n    <script type="text/babel">\n        function App() {\n            return (\n                <div>\n                    <h1>Welcome to My React App</h1>\n                    <p>This is a simple application.</p>\n                </div>\n            );\n        }\n\n        ReactDOM.render(<App />, document.getElementById('root'));\n    <\/script>\n</body>\n</html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ Pilotage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+<style>
+:root {
+  --bg: #0A0A0F;
+  --bg2: #111118;
+  --bg3: #1A1A24;
+  --card: #16161F;
+  --card2: #1E1E2A;
+  --border: #2A2A3A;
+  --border2: #353548;
+  --text: #F0F0F8;
+  --text2: #A0A0B8;
+  --text3: #60607A;
+  --blue: #4F7EFF;
+  --blue-l: rgba(79,126,255,0.12);
+  --green: #2ECC71;
+  --green-l: rgba(46,204,113,0.12);
+  --orange: #FF6B35;
+  --orange-l: rgba(255,107,53,0.12);
+  --red: #FF4757;
+  --red-l: rgba(255,71,87,0.12);
+  --purple: #9B59B6;
+  --purple-l: rgba(155,89,182,0.12);
+  --teal: #1ABC9C;
+  --teal-l: rgba(26,188,156,0.12);
+  --amber: #F39C12;
+  --amber-l: rgba(243,156,18,0.12);
+  --r: 12px;
+  --r2: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow2: 0 2px 12px rgba(0,0,0,0.3);
+}
+.light {
+  --bg: #F4F4F8;
+  --bg2: #EEEEF4;
+  --bg3: #E4E4EE;
+  --card: #FFFFFF;
+  --card2: #F8F8FC;
+  --border: #E0E0EC;
+  --border2: #D0D0E0;
+  --text: #0A0A1A;
+  --text2: #4A4A6A;
+  --text3: #8A8AAA;
+  --blue: #3366FF;
+  --blue-l: rgba(51,102,255,0.08);
+  --green: #16A34A;
+  --green-l: rgba(22,163,74,0.08);
+  --orange: #EA580C;
+  --orange-l: rgba(234,88,12,0.08);
+  --red: #DC2626;
+  --red-l: rgba(220,38,38,0.08);
+  --purple: #7C3AED;
+  --purple-l: rgba(124,58,237,0.08);
+  --teal: #0D9488;
+  --teal-l: rgba(13,148,136,0.08);
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow2: 0 2px 12px rgba(0,0,0,0.06);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+h1,h2,h3 { font-family: 'Syne', sans-serif; }
+.app { display:flex; min-height:100vh; }
+.sidebar { width: 220px; min-height: 100vh; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top:0; left:0; bottom:0; z-index: 100; transition: transform 0.3s; }
+.main { margin-left: 220px; flex: 1; min-height: 100vh; padding: 32px; }
+@media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main { margin-left: 0; padding: 16px; padding-top: 64px; } .mobile-menu-btn { display: flex !important; } }
+.sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid var(--border); }
+.logo-mark { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, var(--blue), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.logo-sub { font-size: 11px; color: var(--text3); margin-top: 2px; letter-spacing: 0.5px; }
+.nav-section { padding: 16px 12px 8px; }
+.nav-label { font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; padding: 0 8px 8px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--r2); cursor: pointer; transition: all 0.15s; font-size: 14px; font-weight: 500; color: var(--text2); margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left; }
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: var(--blue-l); color: var(--blue); }
+.nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.nav-dot { width: 6px; height: 6px; border-radius: 50%; margin-left: auto; }
+.sidebar-bottom { margin-top: auto; padding: 16px 12px; border-top: 1px solid var(--border); }
+.theme-toggle { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--bg3); border-radius: var(--r2); cursor: pointer; border: none; width: 100%; color: var(--text2); font-size: 13px; font-family: 'DM Sans', sans-serif; }
+.toggle-pill { width: 40px; height: 22px; background: var(--border2); border-radius: 11px; position: relative; transition: background 0.2s; }
+.toggle-pill.on { background: var(--blue); }
+.toggle-thumb { width: 16px; height: 16px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: transform 0.2s; }
+.toggle-pill.on .toggle-thumb { transform: translateX(18px); }
+.mobile-header { display: none; position: fixed; top:0; left:0; right:0; z-index: 200; background: var(--bg2); border-bottom: 1px solid var(--border); padding: 12px 16px; align-items: center; justify-content: space-between; }
+@media (max-width: 768px) { .mobile-header { display: flex; } }
+.mobile-menu-btn { display: none; align-items: center; justify-content: center; width: 36px; height: 36px; background: var(--bg3); border: none; border-radius: 8px; color: var(--text); cursor: pointer; font-size: 18px; }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; }
+.overlay.show { display: block; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--shadow2); }
+.card-header { padding: 20px 24px 0; }
+.card-body { padding: 20px 24px; }
+.section-title { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text3); margin-bottom: 12px; }
+.page-header { margin-bottom: 28px; }
+.page-title { font-family: 'Syne', sans-serif; font-size: clamp(24px, 4vw, 32px); font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
+.page-subtitle { font-size: 14px; color: var(--text2); margin-top: 6px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: var(--r2); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; white-space: nowrap; }
+.btn-primary { background: var(--blue); color: white; }
+.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-green { background: var(--green); color: white; }
+.btn-green:hover { filter: brightness(1.1); }
+.btn-red { background: var(--red); color: white; }
+.btn-ghost { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--border); color: var(--text); }
+.btn-sm { padding: 8px 14px; font-size: 13px; }
+.btn-xs { padding: 6px 10px; font-size: 12px; }
+.badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; }
+.badge-blue { background: var(--blue-l); color: var(--blue); }
+.badge-green { background: var(--green-l); color: var(--green); }
+.badge-orange { background: var(--orange-l); color: var(--orange); }
+.badge-red { background: var(--red-l); color: var(--red); }
+.badge-purple { background: var(--purple-l); color: var(--purple); }
+.badge-teal { background: var(--teal-l); color: var(--teal); }
+.badge-amber { background: var(--amber-l); color: var(--amber); }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; }
+.kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; text-align: center; }
+.kpi-val { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; line-height: 1; }
+.kpi-label { font-size: 12px; color: var(--text2); margin-top: 6px; }
+.progress-bar { height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.table-header { display: grid; padding: 10px 16px; font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: 0.5px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+.table-row { display: grid; padding: 14px 16px; border-bottom: 1px solid var(--border); transition: background 0.1s; align-items: center; font-size: 14px; }
+.table-row:hover { background: var(--bg3); }
+.table-row:last-child { border-bottom: none; }
+.form-group { margin-bottom: 20px; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 8px; display: block; }
+.form-input { width: 100%; padding: 12px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r2); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border 0.15s; }
+.form-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-l); }
+.form-input::placeholder { color: var(--text3); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+.form-select { width: 100%; padding: 12px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r2); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; transition: border 0.15s; }
+.form-select:focus { border-color: var(--blue); }
+.day-picker { display: flex; gap: 6px; flex-wrap: wrap; }
+.day-btn { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border); background: transparent; color: var(--text2); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+.day-btn.active { background: var(--blue); border-color: var(--blue); color: white; }
+.day-btn:hover:not(.active) { border-color: var(--blue); color: var(--blue); }
+.task-block { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); }
+.task-accent { width: 4px; background: var(--blue); flex-shrink: 0; }
+.task-inner { padding: 20px 24px; flex: 1; }
+.task-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; }
+.task-meta { font-size: 13px; color: var(--text2); margin-top: 4px; }
+.subtask-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.subtask-row:last-child { border-bottom: none; }
+.subtask-check { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border2); background: transparent; cursor: pointer; flex-shrink: 0; transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
+.subtask-check.done { background: var(--green); border-color: var(--green); }
+.subtask-label { font-size: 14px; flex: 1; }
+.subtask-label.done { color: var(--text3); text-decoration: line-through; }
+.subtask-dur { font-size: 12px; color: var(--text3); }
+.ring-container { position: relative; display: inline-flex; }
+.ring-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.type-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+.type-tab { padding: 10px 16px; border-radius: var(--r2); border: 2px solid transparent; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+.empty { text-align: center; padding: 48px 24px; color: var(--text3); }
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+.empty-text { font-size: 14px; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+.fade-in { animation: fadeIn 0.25s ease forwards; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+.pulse { animation: pulse 2s infinite; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+.stats-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.stat-item { flex: 1; min-width: 100px; }
+.accordion { border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.accordion-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: var(--card); transition: background 0.1s; border: none; width: 100%; text-align: left; color: var(--text); font-family: 'DM Sans', sans-serif; }
+.accordion-header:hover { background: var(--card2); }
+.accordion-body { padding: 16px 20px; background: var(--card2); border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback } = React;
+
+// ─── STORAGE ─────────────────────────────────────────────────
+const DB_KEY = 'pilotage_db_v1';
+const defaultDB = {
+  quotidiens: [], recurrents: [], longTerme: [],
+  ponctuels: [], aliments: [], recettes: [],
+  calories: [], executions: [], exceptions: [],
+  params: { heureBascule: '05:00', poids: '', poidsObjectif: '' },
+};
+
+function loadDB() {
+  try {
+    return { ...defaultDB, ...JSON.parse(localStorage.getItem(DB_KEY) || '{}') };
+  } catch {
+    return defaultDB;
+  }
+}
+
+function saveDB(db) {
+  localStorage.setItem(DB_KEY, JSON.stringify(db));
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────
+function formatDate(d = new Date()) {
+  return d.toLocaleDateString('fr-FR');
+}
+
+function journeeLogique() {
+  const now = new Date();
+  if (now.getHours() < 5) {
+    const y = new Date(now);
+    y.setDate(y.getDate() - 1);
+    return y;
+  }
+  return now;
+}
+
+function genId(prefix, arr) {
+  return `${prefix}_${String(arr.length + 1).padStart(3, '0')}`;
+}
+
+function useDB() {
+  const [db, setDB] = useState(() => loadDB());
+  const update = useCallback((fn) => {
+    setDB(prev => {
+      const next = { ...prev };
+      fn(next);
+      saveDB(next);
+      return next;
+    });
+  }, []);
+  return [db, update];
+}
+
+// ─── NAVIGATION CONFIG ────────────────────────────────────────
+const NAV = [
+  { id: 'maintenant',  label: 'Maintenant',          icon: '⚡', color: 'blue'   },
+  { id: 'vueJour',     label: 'Vue du jour',         icon: '📅', color: 'blue'   },
+  { id: 'ajouter',     label: 'Ajouter',             icon: '＋', color: 'purple' },
+  { id: 'reussites',   label: 'Réussites',           icon: '✨', color: 'amber'  },
+  { id: 'poids',       label: 'Poids',               icon: '⚖️', color: 'purple' },
+  { id: 'quotidiens',  label: 'Quotidiens',          icon: '🔁', color: 'blue'   },
+  { id: 'longTerme',   label: 'Long terme',          icon: '🎯', color: 'green'  },
+  { id: 'ponctuels',   label: 'Ponctuels',           icon: '📌', color: 'red'    },
+  { id: 'alimentation', label: 'Alimentation',       icon: '🥗', color: 'teal'   },
+  { id: 'calories',    label: 'Calories',            icon: '🔥', color: 'orange' },
+  { id: 'archives',    label: 'Archives',            icon: '🗂️', color: 'blue'  },
+];
+
+// ─── APP ─────────────────────────────────────────────────────
+export default function App() {
+  const [page, setPage] = useState('maintenant');
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [db, updateDB] = useDB();
+
+  useEffect(() => {
+    document.body.classList.toggle('light', theme === 'light');
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const navigate = (id) => { setPage(id); setMenuOpen(false); };
+
+  const pages = {
+    maintenant:   <PageMaintenant db={db} updateDB={updateDB} navigate={navigate} />,
+    vueJour:      <PageVueJour db={db} updateDB={updateDB} />,
+    ajouter:      <PageAjouter db={db} updateDB={updateDB} navigate={navigate} />,
+    reussites:    <PageReussites db={db} />,
+    poids:        <PagePoids db={db} updateDB={updateDB} />,
+    quotidiens:   <PageQuotidiens db={db} updateDB={updateDB} navigate={navigate} />,
+    longTerme:    <PageLongTerme db={db} updateDB={updateDB} navigate={navigate} />,
+    ponctuels:    <PagePonctuels db={db} updateDB={updateDB} navigate={navigate} />,
+    alimentation: <PageAlimentation db={db} updateDB={updateDB} />,
+    calories:     <PageCalories db={db} updateDB={updateDB} />,
+    archives:     <PageArchives db={db} />,
+  };
+
+  return (
+    <div className="app">
+      <div className="mobile-header">
+        <button className="mobile-menu-btn" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
+        <span style={{fontFamily:'Syne',fontWeight:800,fontSize:16,background:'linear-gradient(135deg,var(--blue),var(--purple))',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>⚡ Pilotage</span>
+        <div style={{width:36}}/>
+      </div>
+
+      <div className={`overlay ${menuOpen ? 'show' : ''}`} onClick={() => setMenuOpen(false)} />
+
+      <aside className={`sidebar ${menuOpen ? 'open' : ''}`}>
+        <div className="sidebar-logo">
+          <div className="logo-mark">⚡ Pilotage</div>
+          <div className="logo-sub">TABLEAU DE BORD</div>
+        </div>
+        <div className="nav-section" style={{flex:1,overflowY:'auto'}}>
+          <div className="nav-label">Navigation</div>
+          {NAV.map(n => (
+            <button key={n.id} className={`nav-item ${page === n.id ? 'active' : ''}`} onClick={() => navigate(n.id)}>
+              <span className="nav-icon">{n.icon}</span>
+              <span>{n.label}</span>
+              {page === n.id && <div className="nav-dot" style={{background:`var(--${n.color})`}}/>}
+            </button>
+          ))}
+        </div>
+        <div className="sidebar-bottom">
+          <button className="theme-toggle" onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}>
+            <span>{theme === 'dark' ? '🌙 Mode sombre' : '☀️ Mode clair'}</span>
+            <div className={`toggle-pill ${theme === 'light' ? 'on' : ''}`}>
+              <div className="toggle-thumb"/>
+            </div>
+          </button>
+        </div>
+      </aside>
+
+      <main className="main">
+        <div className="fade-in" key={page}>
+          {pages[page]}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+// PAGE MAINTENANT
+function PageMaintenant({ db, updateDB, navigate }) {
+  const actifs = db.quotidiens.filter(q => q.statut === 'Actif');
+  const tache = actifs[0] || null;
+  const [subsDone, setSubsDone] = useState({});
+
+  const toggleSub = (idx) => {
+    setSubsDone(prev => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
+  const terminer = () => {
+    if (!tache) return;
+    updateDB(d => {
+      d.executions.push({
+        id: genId('EX', d.executions),
+        date: formatDate(journeeLogique()),
+        type: 'Quotidien', nom: tache.nom,
+        statut: 'Termine', ts: new Date().toISOString()
+      });
+    });
+    setSubsDone({});
+    alert(`✅ "${tache?.nom}" validé !`);
+  };
+
+  const passer = () => {
+    if (!tache) return;
+    updateDB(d => {
+      d.executions.push({
+        id: genId('EX', d.executions),
+        date: formatDate(journeeLogique()),
+        type: 'Quotidien', nom: tache.nom,
+        statut: 'Skip', ts: new Date().toISOString()
+      });
+    });
+    alert(`Tâche passée.`);
+  };
+
+  const doneCount = tache?.sousObjectifs ? tache.sousObjectifs.filter((_,i) => subsDone[i]).length : 0;
+  const totalSubs = tache?.sousObjectifs?.length || 0;
+  const pct = totalSubs ? Math.round(doneCount / totalSubs * 100) : 0;
+
+  return (
+    <div>
+      <div className="page-header">
+        <h1 className="page-title">Ce que je dois faire</h1>
+        <p className="page-subtitle">{formatDate(journeeLogique())} · Une seule chose à la fois</p>
+      </div>
+
+      <div style={{marginBottom:24}}>
+        <button className="btn btn-ghost" style={{borderColor:'var(--purple)',color:'var(--purple)'}}
+          onClick={() => alert(`🌅 Journée démarrée à ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})} !`)}>
+          🌅 Démarrer la journée
+        </button>
+      </div>
+
+      {!tache ? (
+        <div className="card" style={{marginBottom:24}}>
+          <div className="empty">
+            <div className="empty-icon">🎉</div>
+            <div className="empty-text">Toutes les tâches sont terminées pour aujourd'hui !</div>
+            <button className="btn btn-primary" style={{marginTop:16}} onClick={() => navigate('ajouter')}>
+              Ajouter un objectif
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div style={{marginBottom:24}}>
+          <div className="section-title">EN COURS</div>
+          <div className="task-block">
+            <div style={{display:'flex'}}>
+              <div className="task-accent" style={{background:'var(--blue)'}}/>
+              <div className="task-inner">
+                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:8}}>
+                  <div>
+                    <div className="task-title">{tache.nom}</div>
+                    <div className="task-meta">
+                      {tache.duree && `${tache.duree} min`}
+                      {tache.position && ` · ${tache.position}`}
+                    </div>
+                  </div>
+                  <span className="badge badge-blue">🔁 Quotidien</span>
+                </div>
+
+                {tache.sousObjectifs?.length > 0 && (
+                  <div style={{marginTop:16,paddingTop:16,borderTop:'1px solid var(--border)'}}>
+                    {tache.sousObjectifs.map((so, i) => (
+                      <div key={i} className="subtask-row">
+                        <div className={`subtask-check ${subsDone[i] ? 'done' : ''}`}
+                          onClick={() => toggleSub(i)}>
+                          {subsDone[i] && <span style={{color:'white',fontSize:12}}>✓</span>}
+                        </div>
+                        <span className={`subtask-label ${subsDone[i] ? 'done' : ''}`}>{so.nom}</span>
+                        {so.duree && <span className="subtask-dur">{so.duree} min</span>}
+                      </div>
+                    ))}
+
+                    {totalSubs > 0 && (
+                      <div style={{marginTop:12}}>
+                        <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
+                          <span style={{fontSize:12,color:'var(--text2)'}}>Progression</span>
+                          <span style={{fontSize:12,fontWeight:600,color:'var(--blue)'}}>{doneCount}/{totalSubs} · {pct}%</span>
+                        </div>
+                        <div className="progress-bar">
+                          <div className="progress-fill" style={{width:`${pct}%`,background:'var(--blue)'}}/>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div style={{display:'flex',gap:10,marginTop:20}}>
+                  <button className="btn btn-green" style={{flex:2}} onClick={terminer}>✅ Terminer</button>
+                  <button className="btn btn-ghost" style={{flex:1}} onClick={passer}>⏭ Passer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {actifs.length > 1 && (
+        <div>
+          <div className="section-title">À SUIVRE</div>
+          <div className="card">
+            {actifs.slice(1, 4).map((t, i) => (
+              <div key={t.id} className="table-row" style={{gridTemplateColumns:'1fr auto',borderBottom: i < actifs.slice(1,4).length-1 ? '1px solid var(--border)' : 'none'}}>
+                <div style={{fontWeight:500}}>{t.nom}</div>
+                <span style={{fontSize:12,color:'var(--text3)'}}>{t.duree ? `${t.duree} min` : ''}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// PAGE VUE DU JOUR
+function PageVueJour({ db, updateDB }) {
+  const today = formatDate(journeeLogique());
+  const [date, setDate] = useState(today);
+
+  const planning = [];
+
+  db.quotidiens.filter(q => q.statut === 'Actif').forEach((q, i) => {
+    planning.push({
+      id: q.id, nom: q.nom, dur: q.duree ? `${q.duree} min` : '',
+      cat: 'Quotidien', statut: 'À faire', color: 'blue', ordre: 10 + i
+    });
+  });
+
+  db.recurrents.filter(r => r.statut === 'Actif').forEach((r, i) => {
+    planning.push({
+      id: r.id, nom: r.nom, dur: r.duree ? `${r.duree} min` : '',
+      heure: r.heure, cat: 'Récurrent', statut: 'À faire', color: 'orange', ordre: 20 + i
+    });
+  });
+
+  const retirerBloc = (id) => {
+    if (!confirm('Retirer ce bloc pour cette date uniquement ?')) return;
+    updateDB(d => {
+      d.exceptions.push({
+        id: genId('EXC', d.exceptions),
+        date, blocId: id, action: 'Retire',
+        ts: new Date().toISOString()
+      });
+    });
+  };
+
+  const retires = new Set(
+    db.exceptions.filter(e => e.date === date).map(e => e.blocId)
+  );
+
+  const visible = planning.filter(p => !retires.has(p.id)).sort((a,b) => a.ordre - b.ordre);
+
+  const catColor = {
+    'Quotidien': 'blue', 'Récurrent': 'orange', 'Long terme': 'green',
+    'Ponctuel': 'red', 'Alimentation': 'teal'
+  };
+
+  return (
+    <div>
+      <div className="page-header">
+        <h1 className="page-title">Vue du jour</h1>
+        <p className="page-subtitle">Planning complet · {date}</p>
+      </div>
+
+      <div style={{display:'flex',gap:10,marginBottom:24,alignItems:'center',flexWrap:'wrap'}}>
+        <input type="date" className="form-input" style={{width:'auto'}}
+          value={date.split('/').reverse().join('-')}
+          onChange={e => setDate(e.target.value.split('-').reverse().join('/'))} />
+        <button className="btn btn-ghost btn-sm" onClick={() => setDate(today)}>Aujourd'hui</button>
+      </div>
+
+      <div className="section-title">PLANNING</div>
+      {visible.length === 0 ? (
+        <div className="card"><div className="empty"><div className="empty-icon">📭</div><div className="empty-text">Aucun bloc pour cette date</div></div></div>
+      ) : (
+        <div className="card">
+          <div className="table-header" style={{gridTemplateColumns:'1fr 100px 80px 36px'}}>
+            <span>Bloc</span><span>Catégorie</span><span>Durée</span><span/>
+          </div>
+          {visible.map((p, i) => (
+            <div key={p.id} className="table-row" style={{gridTemplateColumns:'1fr 100px 80px 36px'}}>
+              <div style={{display:'flex',alignItems:'center',gap:10}}>
+                <div style={{width:3,height:24,borderRadius:2,background:`var(--${catColor[p.cat]||'blue'})`}}/>
+                <span style={{fontWeight:500}}>{p.nom}</span>
+              </div>
+              <span className={`badge badge-${catColor[p.cat]||'blue'}`}>{p.cat}</span>
+              <span style={{fontSize:13,color:'var(--text2)'}}>{p.dur}</span>
+              <button onClick={() => retirerBloc(p.id)}
+                style={{background:'none',border:'none',color:'var(--text3)',cursor:'pointer',fontSize:16,padding:4}}>
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// AUTRES PAGES - PLACEHOLDER
+function PageAjouter({ db, updateDB, navigate }) {
+  return <div className="page-header"><h1 className="page-title">Ajouter</h1></div>;
+}
+
+function PageReussites({ db }) {
+  return <div className="page-header"><h1 className="page-title">Réussites</h1></div>;
+}
+
+function PagePoids({ db, updateDB }) {
+  return <div className="page-header"><h1 className="page-title">Poids</h1></div>;
+}
+
+function PageQuotidiens({ db, updateDB, navigate }) {
+  return <div className="page-header"><h1 className="page-title">Quotidiens</h1></div>;
+}
+
+function PageLongTerme({ db, updateDB, navigate }) {
+  return <div className="page-header"><h1 className="page-title">Long Terme</h1></div>;
+}
+
+function PagePonctuels({ db, updateDB, navigate }) {
+  return <div className="page-header"><h1 className="page-title">Ponctuels</h1></div>;
+}
+
+function PageAlimentation({ db, updateDB }) {
+  return <div className="page-header"><h1 className="page-title">Alimentation</h1></div>;
+}
+
+function PageCalories({ db, updateDB }) {
+  return <div className="page-header"><h1 className="page-title">Calories</h1></div>;
+}
+
+function PageArchives({ db }) {
+  return <div className="page-header"><h1 className="page-title">Archives</h1></div>;
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
